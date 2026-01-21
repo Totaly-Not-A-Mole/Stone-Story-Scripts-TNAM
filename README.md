@@ -7,6 +7,8 @@ i really just wanted a nicer place to store and share these then just dumping th
 
 [Weapon Color Grabber](WeaponColorMix.txt)
 
+[Functions](FunctionDump.txt)
+
 ## External Links:
 [Stone Story Discord](https://discord.com/invite/StoneStoryRPG)
 

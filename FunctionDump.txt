@@ -1,0 +1,29 @@
+/////////////////////////////////
+//  mind stone dodge script
+func dodge(S, T)//state, Animation time
+  ?foe.state = S & foe.time = T
+        ?item.GetCooldown("mind") <= 0
+          equipL mind stone
+          equipR compound shield
+
+/////////////////////////////////
+//  Blade of the Fallen God script
+func godBlade(C)//Count
+  ?foe.count >= C
+    ?item.getcooldown("blade") <= 0
+      equip blade of the fallen god
+      activate right
+
+/////////////////////////////////
+//  Bardiche script
+func Bardiche()
+  ?foe.distance <= 10 & item.GetCooldown("bard") <= 0 | item.GetCooldown("bard") > 870
+    equip bardiche
+    activate right
+
+/////////////////////////////////
+//  Heavy Hammer script
+func Hammer()
+  ?foe.distance <= 10 & item.GetCooldown("heavy") <= 0 | item.GetCooldown("heavy") > 870
+    equip heavy hammer
+    activate right
