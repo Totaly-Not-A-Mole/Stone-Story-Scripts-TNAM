@@ -1,0 +1,67 @@
+var timesnap = 0
+var attkCnt = 3
+?loc = Rocky
+  ?loc.loop
+    attkCnt = 3
+    timeSnap = 0
+  disable npcDialog
+  ?foe ! phase1 & foe ! phase2 & foe ! phase3 //do better
+    equip the ghost slayer
+    ?foe.hp <= 0
+      equip shovel
+      ?item.GetCooldown("shovel") <= 0
+        activate right
+
+  ?foe = boss
+
+    ?foe = phase1
+      equipL fire sword
+      equipR compound shield
+      ?foe.debuffs.string ! "damage:1"
+        equipL poison sword
+        equipR compound shield
+      ?hpPrcnt < 50
+        equip the ghost slayer
+      ?foe.debuffs.string ! "Chill:6"
+        equipL ice sword
+        equipR compound shield
+
+    ?foe = phase2
+      ?foe = poison
+        equipL ice sword
+        equipR compound shield
+      :?foe = ice
+        equipL fire sword
+        equipR compound shield
+      :?foe = fire
+        equipL aether wand
+        equipR compound shield
+      :?foe = aether
+        equip the ghost slayer
+      :?foe = vigor
+        equipL poison sword
+        equipR compound shield
+
+    ?foe = phase3
+      ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
+        timeSnap = time
+        timeSnap = timeSnap + 100
+        ?attkCnt >= 6 
+          attkCnt = 0
+        attkCnt = attkCnt + 1
+      equipL fire sword
+      equipR compound shield
+      ?foe.debuffs.string ! "damage:1"
+        equipL poison sword
+        equipR compound shield
+      ?hpPrcnt <= 75
+        equip the ghost slayer
+      ?foe.debuffs.string ! "Chill:6"
+        equipL ice sword
+        equipR compound shield
+      ?foe.armor >= 50
+        equip heavy hammer
+      ?attkCnt >=6 & foe.state ! 107
+        Hammer()
+        dodge(32, 35)
+      dodge(115, 60)

@@ -9,6 +9,8 @@ i really just wanted a nicer place to store and share these then just dumping th
 
 [Functions](FunctionDump.txt)
 
+[Rocky Plateau Automation](RockyPlateau.txt)
+
 ## External Links:
 [Stone Story Discord](https://discord.com/invite/StoneStoryRPG)
 
