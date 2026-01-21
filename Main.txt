@@ -1,0 +1,229 @@
+/////////////////////////////////
+// Created By Blued_Bandit#8282//
+//   and Cupcakesupream#1601   //
+/////////////////////////////////
+//  animation cancleing script
+?item.left.state = 3
+  equipL *0 wand //trash
+  equipL @item.left@
+?item.right.state = 3
+  equipR *0 shield //trash
+  equip @item.right@
+
+//////////////////////////////////
+//  variables are defined here
+var attkCnt = 3
+var timeSnap = 0
+var hpPrcnt
+var arPrcnt
+var maxarmorMax
+var testvar
+var inFoeprnt = ""
+
+//////////////////////////////////
+//  UI elements are defined here
+import UI/MindstoneButton
+//HitPoint and ARmor Percentages
+hpPrcnt = hp * 100
+hpPrcnt = hpPrcnt / maxhp
+?time = 1
+  maxarmorMax = 0
+?maxarmor > maxarmorMax
+  maxarmorMax = maxarmor
+arPrcnt = armor * 100
+?maxarmor > 0
+  arPrcnt = arPrcnt / maxarmor
+:
+  arPrcnt = arPrcnt / maxarmorMax
+//Foe Info Printout
+inFoeprnt = "[" + foe.state + "]"
+^+ "[" + foe.time + "]"
+^+ "[" + foe.distance + "]"
+^+ "[" + foe.id + "]"
+^+ "[BL=" + item.getcooldown("blade") + "]"
+^+ "[M=" + item.getcooldown("mind") + "]"
+^+ "[BA=" + item.getcooldown("bard") + "]"
+^+ "[HA=" + item.getcooldown("heavy") + "]"
+>`0,1,@inFoeprnt@
+>o-6,0,#red,%@hpPrcnt@
+>o-6,1,#cyan,%@arPrcnt@
+
+/////////////////////////////////
+//  functions are defined here
+func dodge(S, T)//state, Animation time
+  ?foe.state = S & foe.time = T
+        ?item.GetCooldown("mind") <= 0
+          equipL mind stone
+          equipR compound shield
+func godBlade(C)//Count
+  ?foe.count >= C
+    ?item.getcooldown("blade") <= 0
+      equip blade of the fallen god
+      activate right
+func Bardiche()
+  ?foe.distance <= 10 & item.GetCooldown("bard") <= 0 | item.GetCooldown("bard") > 870
+    equip bardiche
+    activate right
+func Hammer()
+  ?foe.distance <= 10 & item.GetCooldown("heavy") <= 0 | item.GetCooldown("heavy") > 870
+    equip heavy hammer
+    activate right
+
+/////////////////////////////////
+
+?loc = Icy Ridge
+
+  ?hpPrcnt < 50
+    activate potion
+
+  godBlade(4)
+
+  ?foe = boss
+    ?foe.distance > 3
+      equipR dash
+      equipL gra
+      ?foe.distance > 10
+        equipR dash
+        equipL tri
+    ?foe.distance = 3
+      equip shovel
+    ?foe.distance < 3
+      equipL fire sword
+      equipR compound shield
+    godBlade(0)
+  ?foe.id = ice_wall
+   equip bardiche
+
+  ?foe ! boss 
+   equipL fire sword
+   equipR fire shield
+
+/////////////////////////////////
+
+?loc = Mushroom
+  equipL fire sword
+  equipR compound shield
+  ?armor > 4 & foe.GetCount(20) >= 3
+    equip bardiche
+  ?foe = boss
+    equip bardiche
+    Bardiche()
+
+/////////////////////////////////
+
+?loc = Halls
+  ?time = 1
+    var HEnm
+    HEnm = 0
+  equip the ghost slayer
+  ?foe.count >=6 & HEnm < 1
+    godBlade(6)
+    Henm = 10
+  ?hpPrcnt < 50
+    activate potion
+  dodge(32, 60)
+      
+/////////////////////////////////
+
+?loc = Rocky
+  ?loc.loop
+    attkCnt = 3
+    timeSnap = 0
+  disable npcDialog
+  ?foe ! phase1 & foe ! phase2 & foe ! phase3 //do better
+    equip the ghost slayer
+    ?foe.hp <= 0
+      equip shovel
+      ?item.GetCooldown("shovel") <= 0
+        activate right
+
+  ?foe = boss
+
+    ?foe = phase1
+      equipL fire sword
+      equipR compound shield
+      ?foe.debuffs.string ! "damage:1"
+        equipL poison sword
+        equipR compound shield
+      ?hpPrcnt < 50
+        equip the ghost slayer
+      ?foe.debuffs.string ! "Chill:6"
+        equipL ice sword
+        equipR compound shield
+
+    ?foe = phase2
+      ?foe = poison
+        equipL ice sword
+        equipR compound shield
+      :?foe = ice
+        equipL fire sword
+        equipR compound shield
+      :?foe = fire
+        equipL aether wand
+        equipR compound shield
+      :?foe = aether
+        equip the ghost slayer
+      :?foe = vigor
+        equipL poison sword
+        equipR compound shield
+
+    ?foe = phase3
+      ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
+        timeSnap = time
+        timeSnap = timeSnap + 100
+        ?attkCnt >= 6 
+          attkCnt = 0
+        attkCnt = attkCnt + 1
+      equipL fire sword
+      equipR compound shield
+      ?foe.debuffs.string ! "damage:1"
+        equipL poison sword
+        equipR compound shield
+      ?hpPrcnt <= 75
+        equip the ghost slayer
+      ?foe.debuffs.string ! "Chill:6"
+        equipL ice sword
+        equipR compound shield
+      ?foe.armor >= 50
+        equip heavy hammer
+      ?attkCnt >=6 & foe.state ! 107
+        Hammer()
+        dodge(32, 35)
+      dodge(115, 60)
+
+/////////////////////////////////
+
+?loc = Deadwood
+  ?foe ! boss
+    equip the ghost slayer
+    ?foe.name = Stone Scarab
+      equipL fire sword
+      equipR compound shield
+    ?foe.count >= 4
+      ?item.getcooldown("blade") <= 0
+        equip blade of the fallen god
+        activate right
+  ?foe = boss
+    ?hpPrcnt <= 50
+      activate potion
+    ?foe = phase1
+      ?foe.state = 2
+        equipR fire sword
+        equipL poison sword
+    ?foe = phase2
+      equipL fire sword
+      equipR compound shield
+      ?foe.buffs.string = "poena_mirror:1"
+        equip the ghost slayer
+
+/////////////////////////////////
+
+?loc = Caves of Fear
+  equip the ghost slayer
+  godBlade(6)
+  ?foe = boss
+    equip bardiche
+    dodge(32, 20)
+    Bardiche()
+
+/////////////////////////////////

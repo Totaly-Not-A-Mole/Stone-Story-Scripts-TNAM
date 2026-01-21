@@ -1,0 +1,92 @@
+/////////////////////////////////
+//  item color display code
+//  eventually make this an importable script
+//  its too scuffed to be here
+
+var leftColor
+var rightColor
+var combColor
+
+?item.left.id = trancendent
+  leftColor = 100000
+:?item.left.id = legendary
+  leftColor = 10000
+:?item.left.id = epic
+  leftColor = 1000
+:?item.left.id = heroic
+  leftColor = 100
+:?item.left.id = rare
+  leftColor = 10
+:?item.left.id = uncommon
+  leftColor = 1
+:?item.left.id = common
+  leftColor = 0
+:
+  leftColor = null
+?item.right.id = trancendent
+  rightColor = 100000
+:?item.right.id = legendary
+  rightColor = 10000
+:?item.right.id = epic
+  rightColor = 1000
+:?item.right.id = heroic
+  rightColor = 100
+:?item.right.id = rare
+  rightColor = 10
+:?item.right.id = uncommon
+  rightColor = 1
+:
+  rightColor = 0
+?leftColor = null
+  combColor = rightColor * 2
+:
+  combColor = rightColor + leftColor
+?combColor = 0
+  combColor = "#ffffff"
+:?combColor = 2
+  combColor = "#02e5ff"
+:?combColor = 20
+  combColor = "#ffff62"
+:?combColor = 200
+  combColor = "#32da5a"
+:?combColor = 2000
+  combColor = "#0063ff"
+:?combColor = 20000
+  combColor = "#ff2222"
+:?combColor = 1
+  combColor = "#81f2ff"
+:?combColor = 10
+  combColor = "#ffffb1"
+:?combColor = 100
+  combColor = "#99edad"
+:?combColor = 1000
+  combColor = "#80b1ff"
+:?combColor = 10000
+  combColor = "#ff9191"
+:?combColor = 11
+  combColor = "#81f2b1"
+:?combColor = 101
+  combColor = "#1ae0ad"
+:?combColor = 1001
+  combColor = "#01a4ff"
+:?combColor = 10001  
+  combColor = "#818191"
+:?combColor = 110
+  combColor = "#99ed5e"
+:?combColor = 1010
+  combColor = "#80b1b1"
+:?combColor = 10010
+  combColor = "#ff9142"
+:?combColor = 1100
+  combColor = "#199fad"
+:?combColor = 10100
+  combColor = "#997e3e"
+:?combColor = 11000
+  combColor = "#804390"
+:?combColor > 50000
+  combColor = "#rainff"
+var valboxX
+var valboxY
+valboxX = screen.FromWorldX(pos.x) - 7
+valboxY = screen.FromWorldZ(pos.z - pos.y) - 3
+draw.bg(valboxX,valboxY,combColor,5,3)
