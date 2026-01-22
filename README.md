@@ -9,6 +9,10 @@ i really just wanted a nicer place to store and share these then just dumping th
 
 [Functions](FunctionDump.txt)
 
+[Health/Armor UI](HealthUI.txt)
+
+[Information Display](InfoDisplay.txt)
+
 [Rocky Plateau Automation](RockyPlateau.txt)
 
 ## External Links:
