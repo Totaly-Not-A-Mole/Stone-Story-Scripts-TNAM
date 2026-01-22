@@ -1,0 +1,13 @@
+var inFoeprnt1 = ""
+var inFoeprnt2 = ""
+//Foe Info Printout
+inFoeprnt1 = "[" + foe.state + "]"
+^+ "[" + foe.time + "]"
+^+ "[" + foe.distance + "]"
+^+ "[" + foe.id + "]"
+inFoeprnt2 = "[BL=" + item.getcooldown("blade") + "]"
+^+ "[M=" + item.getcooldown("mind") + "]"
+^+ "[BA=" + item.getcooldown("bard") + "]"
+^+ "[HA=" + item.getcooldown("heavy") + "]"
+>`0,23,@inFoeprnt1@
+>`0,22,@inFoeprnt2@
