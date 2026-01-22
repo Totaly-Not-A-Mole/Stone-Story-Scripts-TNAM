@@ -18,7 +18,8 @@ var hpPrcnt
 var arPrcnt
 var maxarmorMax
 var testvar
-var inFoeprnt = ""
+var inFoeprnt1 = ""
+var inFoeprnt2 = ""
 
 //////////////////////////////////
 //  UI elements are defined here
@@ -35,18 +36,19 @@ arPrcnt = armor * 100
   arPrcnt = arPrcnt / maxarmor
 :
   arPrcnt = arPrcnt / maxarmorMax
+>`5,24,#red,%@hpPrcnt@
+>`11,24,#cyan,%@arPrcnt@
 //Foe Info Printout
-inFoeprnt = "[" + foe.state + "]"
+inFoeprnt1 = "[" + foe.state + "]"
 ^+ "[" + foe.time + "]"
 ^+ "[" + foe.distance + "]"
 ^+ "[" + foe.id + "]"
-^+ "[BL=" + item.getcooldown("blade") + "]"
+inFoeprnt2 = "[BL=" + item.getcooldown("blade") + "]"
 ^+ "[M=" + item.getcooldown("mind") + "]"
 ^+ "[BA=" + item.getcooldown("bard") + "]"
 ^+ "[HA=" + item.getcooldown("heavy") + "]"
->`0,1,@inFoeprnt@
->o-6,0,#red,%@hpPrcnt@
->o-6,1,#cyan,%@arPrcnt@
+>`0,23,@inFoeprnt1@
+>`0,22,@inFoeprnt2@
 
 /////////////////////////////////
 //  functions are defined here
