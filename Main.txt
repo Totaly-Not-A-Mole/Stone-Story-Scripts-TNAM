@@ -201,7 +201,10 @@ func Hammer()
         equip heavy hammer
       ?attkCnt >=6 & foe.state ! 107
         Hammer()
-        dodge(32, 35)
+        ?loc.stars <= 13
+          dodge(32, 35)
+        :
+          dodge(32, 50)
       dodge(115, 60)
 
 /////////////////////////////////
