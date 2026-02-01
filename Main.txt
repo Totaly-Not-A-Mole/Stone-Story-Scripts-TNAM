@@ -132,12 +132,21 @@ func Hammer()
     attkCnt = 3
     timeSnap = 0
   disable npcDialog
-  ?foe ! phase1 & foe ! phase2 & foe ! phase3 //do better
-    equip the ghost slayer
+
     ?foe.hp <= 0
       equip shovel
       ?item.GetCooldown("shovel") <= 0
         activate right
+
+  ?foe = acronian_scout
+    ?foe.debuffs.string ! "damage:1"
+      equipL poison sword
+      equipR compound shield
+    :?hpPrcnt < 100
+      equip the ghost slayer
+    :
+      equipL ice wand
+      equipR compound shield
 
   ?foe = boss
 
