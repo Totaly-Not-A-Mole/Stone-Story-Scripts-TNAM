@@ -133,10 +133,16 @@ func Hammer()
     timeSnap = 0
   disable npcDialog
 
-    ?foe.hp <= 0
-      equip shovel
-      ?item.GetCooldown("shovel") <= 0
-        activate right
+  ?harvest.distance < 5
+    equip shovel
+    ?item.GetCooldown("shovel") <= 0
+      activate right
+  :?pickup.distance < 3
+    equipL star stone
+    equipR compound shield
+  :
+    equipL triskelion
+    equipR compound shield
 
   ?foe = acronian_scout
     ?foe.debuffs.string ! "damage:1"
