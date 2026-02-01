@@ -133,7 +133,7 @@ func Hammer()
     timeSnap = 0
   disable npcDialog
 
-  ?pickup.distance < 3
+  ?pickup.distance < 5
     equipL star stone
     equipR triskelion
   :
@@ -192,7 +192,7 @@ func Hammer()
       ?foe.debuffs.string ! "damage:1"
         equipL poison sword
         equipR compound shield
-      ?hpPrcnt <= 75
+      ?hpPrcnt <= 100
         equip the ghost slayer
       ?foe.debuffs.string ! "Chill:6"
         equipL ice sword
