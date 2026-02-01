@@ -133,13 +133,9 @@ func Hammer()
     timeSnap = 0
   disable npcDialog
 
-  ?harvest.distance < 5
-    equip shovel
-    ?item.GetCooldown("shovel") <= 0
-      activate right
-  :?pickup.distance < 3
+  ?pickup.distance < 3
     equipL star stone
-    equipR compound shield
+    equipR triskelion
   :
     equipL triskelion
     equipR compound shield
