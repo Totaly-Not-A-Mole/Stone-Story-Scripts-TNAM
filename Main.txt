@@ -24,6 +24,7 @@ var inFoeprnt2 = ""
 //////////////////////////////////
 //  UI elements are defined here
 import UI/MindstoneButton
+enable npcDialog
 //HitPoint and ARmor Percentages
 hpPrcnt = hp * 100
 hpPrcnt = hpPrcnt / maxhp
@@ -39,10 +40,10 @@ arPrcnt = armor * 100
 >`5,24,#red,%@hpPrcnt@
 >`11,24,#cyan,%@arPrcnt@
 //Foe Info Printout
-inFoeprnt1 = "[" + foe.state + "]"
-^+ "[" + foe.time + "]"
-^+ "[" + foe.distance + "]"
-^+ "[" + foe.id + "]"
+inFoeprnt1 = "State[" + foe.state + "]"
+^+ "Time[" + foe.time + "]"
+^+ "Distance[" + foe.distance + "]"
+^+ "Id[" + foe.id + "]"
 inFoeprnt2 = "[BL=" + item.getcooldown("blade") + "]"
 ^+ "[M=" + item.getcooldown("mind") + "]"
 ^+ "[BA=" + item.getcooldown("bard") + "]"
@@ -52,25 +53,43 @@ inFoeprnt2 = "[BL=" + item.getcooldown("blade") + "]"
 
 /////////////////////////////////
 //  functions are defined here
+//mindstone dodge
 func dodge(S, T)//state, Animation time
   ?foe.state = S & foe.time = T
         ?item.GetCooldown("mind") <= 0
           equipL mind stone
           equipR compound shield
+//blade of the fallen god ability
 func godBlade(C)//Count
   ?foe.count >= C
     ?item.getcooldown("blade") <= 0
       equip blade of the fallen god
       activate right
+//bardiche ability
 func Bardiche()
-  ?foe.distance <= 10 & item.GetCooldown("bard") <= 0 | item.GetCooldown("bard") > 870
+  ?foe = foe.distance < 12 //change this line as needed
+  ^ & item.CanActivate()
+  ^ & (item.GetCooldown("bardiche") = 0
+  ^ | item.right = "bardiche" //keeps it equipped during the cast
+  ^ & item.right.state = 2)
     equip bardiche
-    activate right
+    activate R
+//heavy hammer ability
 func Hammer()
-  ?foe.distance <= 10 & item.GetCooldown("heavy") <= 0 | item.GetCooldown("heavy") > 870
+  ?foe = foe.distance < 12 //change this line as needed
+  ^ & item.CanActivate()
+  ^ & item.GetCooldown("heavy") <= 0
     equip heavy hammer
+    activate R
+  ?item.right = "heavy" //keeps it equipped during the cast
+  ^ & item.right.state = 2
+    equip heavy hammer
+    activate R
+//dashing shield ability
+func dash()
+  ?item.GetCooldown("dash") <= 0
+    equip dash
     activate right
-
 /////////////////////////////////
 
 ?loc = Icy Ridge
@@ -147,7 +166,7 @@ func Hammer()
     :?hpPrcnt < 100
       equip the ghost slayer
     :
-      equipL ice wand
+      equipL ice sword
       equipR compound shield
 
   ?foe = boss
@@ -158,27 +177,35 @@ func Hammer()
       ?foe.debuffs.string ! "damage:1"
         equipL poison sword
         equipR compound shield
+        >poisoning
       ?hpPrcnt < 50
         equip the ghost slayer
+        >healing
       ?foe.debuffs.string ! "Chill:6"
         equipL ice sword
         equipR compound shield
+        >chilling
 
     ?foe = phase2
       ?foe = poison
         equipL ice sword
         equipR compound shield
+        >ice phase
       :?foe = ice
         equipL fire sword
         equipR compound shield
+        >fire phase
       :?foe = fire
         equipL aether wand
         equipR compound shield
+        >aether phase
       :?foe = aether
         equip the ghost slayer
+        >vigor phase
       :?foe = vigor
         equipL poison sword
         equipR compound shield
+        >poison phase
 
     ?foe = phase3
       ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
@@ -189,23 +216,38 @@ func Hammer()
         attkCnt = attkCnt + 1
       equipL fire sword
       equipR compound shield
-      ?foe.debuffs.string ! "damage:1"
-        equipL poison sword
-        equipR compound shield
-      ?hpPrcnt < 100
-        equip the ghost slayer
-      ?foe.debuffs.string ! "Chill:6"
-        equipL ice sword
-        equipR compound shield
       ?foe.armor >= 50
         equip heavy hammer
+        >armor > 50
+      :?foe.debuffs.string ! "Chill:6"
+        equipL ice sword
+        equipR compound shield
+        >chilling
+      :?foe.debuffs.string ! "damage:1"
+        equipL poison sword
+        equipR compound shield
+        >poisoning
+      :?hpPrcnt <= 20
+        activate potion
+      :?hpPrcnt < 100
+        equip the ghost slayer
+        >healing
+      :
+        equipL fire sword
+        equipR compound shield
+        >fallback
       ?attkCnt >=6 & foe.state ! 107
         Hammer()
+        equip hammer
+        >hammer phase
         ?loc.stars <= 13
           dodge(32, 35)
+          >dodge slap easy
         :
           dodge(32, 50)
+          >dodge slap hard
       dodge(115, 60)
+
 
 /////////////////////////////////
 
@@ -235,11 +277,24 @@ func Hammer()
 /////////////////////////////////
 
 ?loc = Caves of Fear
-  equip the ghost slayer
+  equip aether crossbow
+  ?pickup.distance < 5
+    equipL star stone
+    equipR triskelion
   godBlade(6)
   ?foe = boss
-    equip bardiche
     dodge(32, 20)
     Bardiche()
+    ?foe.debuffs.string ! "damage:1"
+      equipL poison sword
+      equipR compound shield
+    :?foe.debuffs.string ! "Chill:6"
+      equipL ice sword
+      equipR compound shield
+    :?hpPrcnt < 100
+      equip the ghost slayer
+    :
+      equipL fire sword
+      equipR compound shield
 
 /////////////////////////////////
