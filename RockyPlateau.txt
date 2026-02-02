@@ -8,12 +8,12 @@ hpPrcnt = hpPrcnt / maxhp
 //  Necicary functions
 //Heavy Hammer Ability
 func Hammer()
-  ?foe = foe.distance < 12 //change this line as needed
+  ?foe = foe.distance < 12
   ^ & item.CanActivate()
   ^ & item.GetCooldown("heavy") <= 0
     equip heavy hammer
     activate R
-  ?item.right = "heavy" //keeps it equipped during the cast
+  ?item.right = "heavy"
   ^ & item.right.state = 2
     equip heavy hammer
     activate R
@@ -25,18 +25,18 @@ func dodge(S, T)//state, Animation time
           equipR compound shield
 //  main script
 ?loc = Rocky
+//reset variables on loop
   ?loc.loop
     attkCnt = 3
     timeSnap = 0
-  disable npcDialog
-
+//pickup items (ignore boulders for time)
   ?pickup.distance < 5
     equipL star stone
     equipR triskelion
   :
     equipL triskelion
     equipR compound shield
-
+//scout fight (11 to 15 stars)
   ?foe = acronian_scout
     ?foe.debuffs.string ! "damage:1"
       equipL poison sword
@@ -46,7 +46,7 @@ func dodge(S, T)//state, Animation time
     :
       equipL ice sword
       equipR compound shield
-
+//the man himself
   ?foe = boss
 
     ?foe = phase1
@@ -55,11 +55,11 @@ func dodge(S, T)//state, Animation time
       ?foe.debuffs.string ! "damage:1"
         equipL poison sword
         equipR compound shield
-      ?hpPrcnt < 50
-        equip the ghost slayer
-      ?foe.debuffs.string ! "Chill:6"
+      :?foe.debuffs.string ! "Chill:6"
         equipL ice sword
         equipR compound shield
+      :?hpPrcnt < 50
+        equip the ghost slayer
 
     ?foe = phase2
       ?foe = poison
@@ -78,7 +78,12 @@ func dodge(S, T)//state, Animation time
         equipR compound shield
 
     ?foe = phase3
-      ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
+//time snapshot, prevents attack count tracker from
+//increasing more than once per attack animation,
+//used to detect when this bitch is gonna gain armor
+//so we can hammer ability beforehand
+      ?foe.state = 32 & timeSnap < time 
+      ^|foe.state = 115 & timeSnap < time
         timeSnap = time
         timeSnap = timeSnap + 100
         ?attkCnt >= 6 

@@ -18,8 +18,6 @@ var hpPrcnt
 var arPrcnt
 var maxarmorMax
 var testvar
-var inFoeprnt1 = ""
-var inFoeprnt2 = ""
 
 //////////////////////////////////
 //  UI elements are defined here
@@ -39,17 +37,16 @@ arPrcnt = armor * 100
   arPrcnt = arPrcnt / maxarmorMax
 >`5,24,#red,%@hpPrcnt@
 >`11,24,#cyan,%@arPrcnt@
-//Foe Info Printout
-inFoeprnt1 = "State[" + foe.state + "]"
-^+ "Time[" + foe.time + "]"
-^+ "Distance[" + foe.distance + "]"
-^+ "Id[" + foe.id + "]"
-inFoeprnt2 = "[BL=" + item.getcooldown("blade") + "]"
-^+ "[M=" + item.getcooldown("mind") + "]"
-^+ "[BA=" + item.getcooldown("bard") + "]"
-^+ "[HA=" + item.getcooldown("heavy") + "]"
->`0,23,@inFoeprnt1@
->`0,22,@inFoeprnt2@
+//Info Printout
+
+>`0,23,Foe.time: @foe.time@
+>`0,22,Foe.state: @foe.state@
+>`0,21,Foe.distance: @foe.distance@
+>`0,20,Foe.id: @foe.id@
+>`0,19,Blade CD: @item.getcooldown("blade")@
+>`0,18,Mind CD: @item.getcooldown("mind")@
+>`0,17,Bardiche CD: @item.getcooldown("bard")@
+>`0,16,Hammer CD: @item.getcooldown("heavy")@
 
 /////////////////////////////////
 //  functions are defined here
@@ -177,35 +174,27 @@ func dash()
       ?foe.debuffs.string ! "damage:1"
         equipL poison sword
         equipR compound shield
-        >poisoning
       ?hpPrcnt < 50
         equip the ghost slayer
-        >healing
       ?foe.debuffs.string ! "Chill:6"
         equipL ice sword
         equipR compound shield
-        >chilling
 
     ?foe = phase2
       ?foe = poison
         equipL ice sword
         equipR compound shield
-        >ice phase
       :?foe = ice
         equipL fire sword
         equipR compound shield
-        >fire phase
       :?foe = fire
         equipL aether wand
         equipR compound shield
-        >aether phase
       :?foe = aether
         equip the ghost slayer
-        >vigor phase
       :?foe = vigor
         equipL poison sword
         equipR compound shield
-        >poison phase
 
     ?foe = phase3
       ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
@@ -218,34 +207,26 @@ func dash()
       equipR compound shield
       ?foe.armor >= 50
         equip heavy hammer
-        >armor > 50
       :?foe.debuffs.string ! "Chill:6"
         equipL ice sword
         equipR compound shield
-        >chilling
       :?foe.debuffs.string ! "damage:1"
         equipL poison sword
         equipR compound shield
-        >poisoning
       :?hpPrcnt <= 20
         activate potion
       :?hpPrcnt < 100
         equip the ghost slayer
-        >healing
       :
         equipL fire sword
         equipR compound shield
-        >fallback
       ?attkCnt >=6 & foe.state ! 107
         Hammer()
         equip hammer
-        >hammer phase
         ?loc.stars <= 13
           dodge(32, 35)
-          >dodge slap easy
         :
           dodge(32, 50)
-          >dodge slap hard
       dodge(115, 60)
 
 
