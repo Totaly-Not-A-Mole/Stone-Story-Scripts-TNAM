@@ -1,29 +1,63 @@
-/////////////////////////////////
-//  mind stone dodge script
+/////////////////////////////////////////
+//mindstone dodge script
 func dodge(S, T)//state, Animation time
   ?foe.state = S & foe.time = T
         ?item.GetCooldown("mind") <= 0
           equipL mind stone
           equipR compound shield
 
-/////////////////////////////////
-//  Blade of the Fallen God script
+/////////////////////////////////////////
+//blade of the fallen god ability
 func godBlade(C)//Count
   ?foe.count >= C
     ?item.getcooldown("blade") <= 0
       equip blade of the fallen god
       activate right
 
-/////////////////////////////////
-//  Bardiche script
+/////////////////////////////////////////
+//bardiche ability
 func Bardiche()
-  ?foe.distance <= 10 & item.GetCooldown("bard") <= 0 | item.GetCooldown("bard") > 870
+  ?foe = foe.distance < 12 //change this line as needed
+  ^ & item.CanActivate()
+  ^ & (item.GetCooldown("bardiche") = 0
+  ^ | item.right = "bardiche" //keeps it equipped during the cast
+  ^ & item.right.state = 2)
     equip bardiche
+    activate R
+
+/////////////////////////////////////////
+//heavy hammer ability
+func Hammer()
+  ?foe = foe.distance < 12 //change this line as needed
+  ^ & item.CanActivate()
+  ^ & item.GetCooldown("heavy") <= 0
+    equip heavy hammer
+    activate R
+  ?item.right = "heavy" //keeps it equipped during the cast
+  ^ & item.right.state = 2
+    equip heavy hammer
+    activate R
+
+//////////////////////////////////////////
+//dashing shield ability
+func dash()
+  ?item.GetCooldown("dash") <= 0
+    equip dash
     activate right
 
-/////////////////////////////////
-//  Heavy Hammer script
-func Hammer()
-  ?foe.distance <= 10 & item.GetCooldown("heavy") <= 0 | item.GetCooldown("heavy") > 870
-    equip heavy hammer
+//////////////////////////////////////////
+//cinderwisp ability
+func cinder(deBuff)//debuff count
+  ?item.getcooldown("cinderwisp") <= 0
+  ^ & foe.debuffs.Count >= deBuff
+    activate cinderwisp
+
+//////////////////////////////////////////
+//summon cinderwisp
+func summonCinder(sCnt)//summon count
+  ?summon.count = sCnt &
+  ^item.CanActivate() |
+  ^item.right = "fire talisman" &
+  ^item.right.state = 2
+    equipR fire talisman
     activate right

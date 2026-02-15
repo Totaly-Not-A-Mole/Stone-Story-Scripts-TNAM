@@ -23,21 +23,40 @@ func dodge(S, T)//state, Animation time
         ?item.GetCooldown("mind") <= 0
           equipL mind stone
           equipR compound shield
+//cinderwisp ability
+func cinder(deBuff)//debuff count
+  ?item.getcooldown("cinderwisp") <= 0
+  ^ & foe.debuffs.Count >= deBuff
+    activate cinderwisp
+//summon cinderwisp
+func summonCinder(sCnt)//summon count
+  ?summon.count = sCnt &
+  ^item.CanActivate() |
+  ^item.right = "fire talisman" &
+  ^item.right.state = 2
+    equipR fire talisman
+    activate right
 //  main script
 ?loc = Rocky
 //reset variables on loop
   ?loc.loop
     attkCnt = 3
     timeSnap = 0
+//summon cinderwisp
+  ?summon.count = 0
+    summonCinder(0)
+  cinder(10)
+  :?foe ! boss
 //pickup items (ignore boulders for time)
-  ?pickup.distance < 5
-    equipL star stone
-    equipR triskelion
-  :
-    equipL triskelion
-    equipR compound shield
-//scout fight (11 to 15 stars)
-  ?foe = acronian_scout
+    ?pickup.distance < 5
+      equipL star stone
+      equipR triskelion
+    :
+      equipL triskelion
+      equipR compound shield)
+//arconaian scout automation
+  :?foe = acronian_scout
+    godBlade(0)
     ?foe.debuffs.string ! "damage:1"
       equipL poison sword
       equipR compound shield
@@ -47,7 +66,7 @@ func dodge(S, T)//state, Animation time
       equipL ice sword
       equipR compound shield
 //the man himself
-  ?foe = boss
+  :?foe = boss
 
     ?foe = phase1
       equipL fire sword
