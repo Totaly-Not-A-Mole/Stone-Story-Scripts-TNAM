@@ -47,6 +47,9 @@ arPrcnt = armor * 100
 >`0,18,Mind CD: @item.getcooldown("mind")@
 >`0,17,Bardiche CD: @item.getcooldown("bard")@
 >`0,16,Hammer CD: @item.getcooldown("heavy")@
+>`0,15,Rstate: @item.right.state@
+>`0,14,summon count: @summon.count@
+>`0,13,Cinder CD: @item.getcooldown("cinderwisp")@
 
 /////////////////////////////////
 //  functions are defined here
@@ -87,11 +90,25 @@ func dash()
   ?item.GetCooldown("dash") <= 0
     equip dash
     activate right
+//cinderwisp ability
+func cinder(deBuff)//debuff count
+  ?item.getcooldown("cinderwisp") <= 0
+  ^ & foe.debuffs.Count >= deBuff
+    activate cinderwisp
+//summon cinderwisp
+func summonCinder(sCnt)//summon count
+  ?summon.count = sCnt &
+  ^item.CanActivate() |
+  ^item.right = "fire talisman" &
+  ^(item.right.state = 2 | item.right.state = 4)
+    equipR fire talisman
+    ?item.right.state = 1
+      activate right
 /////////////////////////////////
 
 ?loc = Icy Ridge
 
-  ?hpPrcnt < 50
+  ?hpPrcnt < 15
     activate potion
 
   godBlade(4)
@@ -109,12 +126,19 @@ func dash()
       equipL fire sword
       equipR compound shield
     godBlade(0)
+    Bardiche()
+
   ?foe.id = ice_wall
-   equip bardiche
+    Bardiche()
 
   ?foe ! boss 
-   equipL fire sword
-   equipR fire shield
+    ?foe.GetCount(15) >= 3
+      equip bardiche
+    :
+      equipL fire sword
+      equipR compound shield
+
+  
 
 /////////////////////////////////
 
@@ -144,92 +168,99 @@ func dash()
 /////////////////////////////////
 
 ?loc = Rocky
-  ?loc.loop
-    attkCnt = 3
-    timeSnap = 0
-  disable npcDialog
-
-  ?pickup.distance < 5
-    equipL star stone
-    equipR triskelion
+  ?summon.count = 0
+    summonCinder(0)
   :
-    equipL triskelion
-    equipR compound shield
+    ?loc.loop
+      attkCnt = 3
+      timeSnap = 0
+    disable npcDialog
 
-  ?foe = acronian_scout
-    ?foe.debuffs.string ! "damage:1"
-      equipL poison sword
-      equipR compound shield
-    :?hpPrcnt < 100
-      equip the ghost slayer
+    cinder(10)
+    ?pickup.distance < 5
+      equipL star stone
+      equipR triskelion
     :
-      equipL ice sword
+      equipL triskelion
       equipR compound shield
 
-  ?foe = boss
-
-    ?foe = phase1
-      equipL fire sword
-      equipR compound shield
+    ?foe = acronian_scout
+      godBlade(0)
+      Bardiche()
       ?foe.debuffs.string ! "damage:1"
         equipL poison sword
         equipR compound shield
-      ?hpPrcnt < 50
-        equip the ghost slayer
-      ?foe.debuffs.string ! "Chill:6"
-        equipL ice sword
-        equipR compound shield
-
-    ?foe = phase2
-      ?foe = poison
-        equipL ice sword
-        equipR compound shield
-      :?foe = ice
-        equipL fire sword
-        equipR compound shield
-      :?foe = fire
-        equipL aether wand
-        equipR compound shield
-      :?foe = aether
-        equip the ghost slayer
-      :?foe = vigor
-        equipL poison sword
-        equipR compound shield
-
-    ?foe = phase3
-      ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
-        timeSnap = time
-        timeSnap = timeSnap + 100
-        ?attkCnt >= 6 
-          attkCnt = 0
-        attkCnt = attkCnt + 1
-      equipL fire sword
-      equipR compound shield
-      ?foe.armor >= 50
-        equip heavy hammer
-      :?foe.debuffs.string ! "Chill:6"
-        equipL ice sword
-        equipR compound shield
-      :?foe.debuffs.string ! "damage:1"
-        equipL poison sword
-        equipR compound shield
-      :?hpPrcnt <= 20
-        activate potion
       :?hpPrcnt < 100
         equip the ghost slayer
       :
+        equipL ice sword
+        equipR compound shield
+
+    ?foe = boss
+
+      ?foe = phase1
+        ?foe.debuffs.string ! "damage:1"
+          equipL poison sword
+          equipR compound shield
+        :?foe.debuffs.string ! "Chill:6"
+          equipL ice sword
+          equipR compound shield
+        :?hpPrcnt < 50
+          equip the ghost slayer
+        :
+          equipL fire sword
+          equipR compound shield
+        Bardiche() 
+
+      ?foe = phase2
+        ?foe = poison
+          equipL ice sword
+          equipR compound shield
+        :?foe = ice
+          equipL fire sword
+          equipR compound shield
+        :?foe = fire
+          equipL aether wand
+          equipR compound shield
+        :?foe = aether
+          equip the ghost slayer
+        :?foe = vigor
+          equipL poison sword
+          equipR compound shield
+
+      ?foe = phase3
+        ?foe.state = 32 & timeSnap < time | foe.state = 115 & timeSnap < time
+          timeSnap = time
+          timeSnap = timeSnap + 100
+          ?attkCnt >= 6 
+            attkCnt = 0
+          attkCnt = attkCnt + 1
         equipL fire sword
         equipR compound shield
-      ?attkCnt >=6 & foe.state ! 107
-        Hammer()
-        equip hammer
-        ?loc.stars <= 13
-          dodge(32, 35)
+        ?foe.armor >= 50
+          equip heavy hammer
+        :?foe.debuffs.string ! "Chill:6"
+          equipL ice sword
+          equipR compound shield
+        :?foe.debuffs.string ! "damage:1"
+          equipL poison sword
+          equipR compound shield
+        :?hpPrcnt <= 20
+          activate potion
+        :?hpPrcnt < 100
+          equip the ghost slayer
         :
-          dodge(32, 50)
-      dodge(115, 60)
-
-
+          equipL fire sword
+          equipR compound shield
+        ?attkCnt >=6 & foe.state ! 107
+          Hammer()
+          equip hammer
+          ?loc.stars <= 13
+            dodge(32, 35)
+          :
+            dodge(32, 50)
+        dodge(115, 60)
+  
 /////////////////////////////////
 
 ?loc = Deadwood
