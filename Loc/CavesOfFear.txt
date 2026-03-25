@@ -1,0 +1,23 @@
+//necessary functions
+import SSTNAM/FunctionDump
+//main script
+?loc = Caves of Fear
+  equip aether crossbow
+  ?pickup.distance < 5
+    equipL star stone
+    equipR triskelion
+  godBlade(6)
+  ?foe = boss
+    dodge(32, 20)
+    Bardiche()
+    ?foe.debuffs.string ! "damage:1"
+      equipL poison sword
+      equipR compound shield
+    :?foe.debuffs.string ! "Chill:6"
+      equipL ice sword
+      equipR compound shield
+    :?hpPrcnt < 100
+      equip the ghost slayer
+    :
+      equipL fire sword
+      equipR compound shield

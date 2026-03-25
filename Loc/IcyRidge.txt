@@ -1,0 +1,35 @@
+import SSTNAM/FunctionDump
+//  main script
+
+
+?loc = Icy Ridge
+
+  ?hpPrcnt < 15
+    activate potion
+
+  godBlade(4)
+
+  ?foe = boss
+    ?foe.distance > 3
+      equipR dash
+      equipL gra
+      ?foe.distance > 10
+        equipR dash
+        equipL tri
+    ?foe.distance = 3
+      equip shovel
+    ?foe.distance < 3
+      equipL fire sword
+      equipR compound shield
+    godBlade(0)
+    Bardiche()
+
+  ?foe.id = ice_wall
+    Bardiche()
+
+  ?foe ! boss 
+    ?foe.GetCount(15) >= 3
+      equip bardiche
+    :
+      equipL fire sword
+      equipR compound shield

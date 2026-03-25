@@ -1,31 +1,26 @@
-/////////////////////////////////////////
-//mindstone dodge script
+//mindstone dodge
 func dodge(S, T)//state, Animation time
   ?foe.state = S & foe.time = T
         ?item.GetCooldown("mind") <= 0
           equipL mind stone
           equipR compound shield
-
-/////////////////////////////////////////
 //blade of the fallen god ability
 func godBlade(C)//Count
   ?foe.count >= C
     ?item.getcooldown("blade") <= 0
       equip blade of the fallen god
       activate right
-
-/////////////////////////////////////////
 //bardiche ability
 func Bardiche()
   ?foe = foe.distance < 12 //change this line as needed
   ^ & item.CanActivate()
-  ^ & (item.GetCooldown("bardiche") = 0
-  ^ | item.right = "bardiche" //keeps it equipped during the cast
-  ^ & item.right.state = 2)
+  ^ & item.GetCooldown("bard") <= 0
     equip bardiche
     activate R
-
-/////////////////////////////////////////
+  ?item.right = "bard" //keeps it equipped during the cast
+  ^ & item.right.state = 2
+    equip bardiche
+    activate R
 //heavy hammer ability
 func Hammer()
   ?foe = foe.distance < 12 //change this line as needed
@@ -37,22 +32,11 @@ func Hammer()
   ^ & item.right.state = 2
     equip heavy hammer
     activate R
-
-//////////////////////////////////////////
 //dashing shield ability
 func dash()
   ?item.GetCooldown("dash") <= 0
     equip dash
     activate right
-
-//////////////////////////////////////////
-//cinderwisp ability
-func cinder(deBuff)//debuff count
-  ?item.getcooldown("cinderwisp") <= 0
-  ^ & foe.debuffs.Count >= deBuff
-    activate cinderwisp
-
-//////////////////////////////////////////
 //summon cinderwisp
 func summonCinder(sCnt)//summon count
   ?summon.count = sCnt &
@@ -61,3 +45,10 @@ func summonCinder(sCnt)//summon count
   ^item.right.state = 2
     equipR fire talisman
     activate right
+//cinderwisp ability
+func cinder(C)//debuff count
+  var deBuff
+  deBuff = "Ignition:" + C
+  ?item.getcooldown("cinderwisp") <= 0
+  ^ & foe.debuffs.string = deBuff
+    activate cinderwisp

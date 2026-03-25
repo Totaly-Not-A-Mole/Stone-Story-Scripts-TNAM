@@ -1,0 +1,27 @@
+//necicary functions
+import SSTNAM/FunctionDump
+//main script
+?loc = Mushroom Forest
+  ?summon.count = 0
+    summonCinder(0)
+  ?pickup.distance < 5
+    equipL star stone
+    equipR triskelion
+  :?foe ! boss
+    equipL fire sword
+    equipR compound shield
+  :?foe = boss
+    bardiche()
+    cinder("10")
+    ?foe.debuffs.string ! "damage:1"
+      equipL poison sword
+      equipR compound shield
+    :?foe.debuffs.string ! "Chill:6"
+      equipL ice sword
+      equipR compound shield
+    :?hpPrcnt < 100
+      equip the ghost slayer
+    :
+      equipL fire sword
+      equipR compound shield
+  

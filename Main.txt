@@ -69,9 +69,11 @@ func godBlade(C)//Count
 func Bardiche()
   ?foe = foe.distance < 12 //change this line as needed
   ^ & item.CanActivate()
-  ^ & (item.GetCooldown("bardiche") = 0
-  ^ | item.right = "bardiche" //keeps it equipped during the cast
-  ^ & item.right.state = 2)
+  ^ & item.GetCooldown("bard") <= 0
+    equip bardiche
+    activate R
+  ?item.right = "bard" //keeps it equipped during the cast
+  ^ & item.right.state = 2
     equip bardiche
     activate R
 //heavy hammer ability
@@ -91,9 +93,11 @@ func dash()
     equip dash
     activate right
 //cinderwisp ability
-func cinder(deBuff)//debuff count
+func cinder(C)//debuff count
+  var deBuff
+  deBuff = "Ignition:" + C
   ?item.getcooldown("cinderwisp") <= 0
-  ^ & foe.debuffs.Count >= deBuff
+  ^ & foe.debuffs.string = deBuff
     activate cinderwisp
 //summon cinderwisp
 func summonCinder(sCnt)//summon count
@@ -137,8 +141,6 @@ func summonCinder(sCnt)//summon count
       equipL fire sword
       equipR compound shield
 
-  
-
 /////////////////////////////////
 
 ?loc = Mushroom
@@ -159,7 +161,7 @@ func summonCinder(sCnt)//summon count
   equip the ghost slayer
   ?foe.count >=6 & HEnm < 1
     godBlade(6)
-    Henm = 10
+    HEnm = 10
   ?hpPrcnt < 50
     activate potion
   dodge(32, 60)
@@ -174,8 +176,7 @@ func summonCinder(sCnt)//summon count
 
   ?summon.count = 0
     summonCinder(0)
-  cinder(10)
-  :?foe ! boss
+  :?foe ! boss & foe ! acronian_soldier
     ?pickup.distance < 5
       equipL star stone
       equipR triskelion
@@ -186,6 +187,7 @@ func summonCinder(sCnt)//summon count
   :?foe = acronian_scout
     godBlade(0)
     Bardiche()
+    cinder("10")
     ?foe.debuffs.string ! "damage:1"
       equipL poison sword
       equipR compound shield
@@ -195,8 +197,25 @@ func summonCinder(sCnt)//summon count
       equipL ice sword
       equipR compound shield
 
-  :?foe = boss
+  :?foe = acronian_soldier
+    godBlade(0)
+    cinder("10")
+    ?foe.debuffs.string ! "damage:1"
+      equipL poison sword
+      equipR compound shield
+    :?foe.debuffs.string ! "Chill:6"
+      equipL ice sword
+      equipR compound shield
+    :?hpPrcnt < 100
+      equip the ghost slayer
+    :?armorPrcnt > 50 & foe.armor > 0
+        equip heavy hammer
+    :
+      equipL ice sword
+      equipR compound shield
 
+  :?foe = boss
+    cinder("10")
     ?foe = phase1
       ?foe.debuffs.string ! "damage:1"
         equipL poison sword
@@ -251,6 +270,7 @@ func summonCinder(sCnt)//summon count
       :
         equipL fire sword
         equipR compound shield
+        Bardiche()
       ?attkCnt >=6 & foe.state ! 107
         Hammer()
         equip hammer
@@ -259,6 +279,8 @@ func summonCinder(sCnt)//summon count
         :
           dodge(32, 50)
       dodge(115, 60)
+      ?foe.state = 112
+        Bardiche()
   
 /////////////////////////////////
 

@@ -1,5 +1,6 @@
-var hpprcnt
-var arprcnt
+var hpPrcnt
+var arPrcnt
+var maxarmorMax
 //HitPoint and ARmor Percentages
 hpPrcnt = hp * 100
 hpPrcnt = hpPrcnt / maxhp

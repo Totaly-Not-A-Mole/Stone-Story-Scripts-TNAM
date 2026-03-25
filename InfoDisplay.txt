@@ -1,13 +1,11 @@
-var inFoeprnt1 = ""
-var inFoeprnt2 = ""
-//Foe Info Printout
-inFoeprnt1 = "[" + foe.state + "]"
-^+ "[" + foe.time + "]"
-^+ "[" + foe.distance + "]"
-^+ "[" + foe.id + "]"
-inFoeprnt2 = "[BL=" + item.getcooldown("blade") + "]"
-^+ "[M=" + item.getcooldown("mind") + "]"
-^+ "[BA=" + item.getcooldown("bard") + "]"
-^+ "[HA=" + item.getcooldown("heavy") + "]"
->`0,23,@inFoeprnt1@
->`0,22,@inFoeprnt2@
+>`0,23,Foe.time: @foe.time@
+>`0,22,Foe.state: @foe.state@
+>`0,21,Foe.distance: @foe.distance@
+>`0,20,Foe.id: @foe.id@
+>`0,19,Blade CD: @item.getcooldown("blade")@
+>`0,18,Mind CD: @item.getcooldown("mind")@
+>`0,17,Bardiche CD: @item.getcooldown("bard")@
+>`0,16,Hammer CD: @item.getcooldown("heavy")@
+>`0,15,Rstate: @item.right.state@
+>`0,14,summon count: @summon.count@
+>`0,13,Cinder CD: @item.getcooldown("cinderwisp")@
