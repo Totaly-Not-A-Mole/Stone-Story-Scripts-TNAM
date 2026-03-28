@@ -7,13 +7,13 @@ i really just wanted a nicer place to store and share these then just dumping th
 
 [Weapon Color Grabber](WeaponColorMix.txt)
 
-[Functions](FunctionDump.txt)
+[Functions](FunctionDump.txt) (Now Global!)
 
 [Health/Armor UI](HealthUI.txt)
 
 [Information Display](InfoDisplay.txt)
 
-[Rocky Plateau Automation](RockyPlateau.txt)
+[Rocky Plateau Automation](Loc/RockyPlateau.txt)
 
 ## External Links:
 [Stone Story Discord](https://discord.com/invite/StoneStoryRPG)
