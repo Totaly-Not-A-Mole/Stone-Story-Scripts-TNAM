@@ -1,3 +1,7 @@
+/////////////////////////////////
+// Created By Blued_Bandit#8282//
+//   and Cupcakesupream#1601   //
+/////////////////////////////////
 //  Variables
 var attkCnt = 3
 var timeSnap = 0

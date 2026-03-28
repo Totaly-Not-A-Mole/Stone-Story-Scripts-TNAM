@@ -1,9 +1,18 @@
+/////////////////////////////////
+// Created By Blued_Bandit#8282//
+//   and Cupcakesupream#1601   //
+/////////////////////////////////
 //necicary functions
-import SSTNAM/FunctionDump
+var util = import SSTNAM/FunctionDump
+var Prcnt1 = new SSTNAM/functionDump
+var Prcnt2 = new SSTNAM/functionDump
+util.AAC()
+var hpPrcnt = Prcnt1.HPP()
+var arPrcnt = Prcnt2.ARP()
 //main script
 ?loc = Mushroom Forest
   ?summon.count = 0
-    summonCinder(0)
+    util.summonCinder(0)
   ?pickup.distance < 5
     equipL star stone
     equipR triskelion
@@ -11,8 +20,8 @@ import SSTNAM/FunctionDump
     equipL fire sword
     equipR compound shield
   :?foe = boss
-    bardiche()
-    cinder("10")
+    util.bardiche()
+    util.cinder("10")
     ?foe.debuffs.string ! "damage:1"
       equipL poison sword
       equipR compound shield

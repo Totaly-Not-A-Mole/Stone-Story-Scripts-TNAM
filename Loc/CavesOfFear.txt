@@ -1,15 +1,24 @@
+////////////////////////////////
+// Created By Blued_Bandit#8282//
+//   and Cupcakesupream#1601   //
+/////////////////////////////////
 //necessary functions
-import SSTNAM/FunctionDump
+var util = import SSTNAM/FunctionDump
+var Prcnt1 = new SSTNAM/functionDump
+var Prcnt2 = new SSTNAM/functionDump
+util.AAC()
+var hpPrcnt = Prcnt1.HPP()
+var arPrcnt = Prcnt2.ARP()
 //main script
 ?loc = Caves of Fear
   equip aether crossbow
   ?pickup.distance < 5
     equipL star stone
     equipR triskelion
-  godBlade(6)
+  util.godBlade(6)
   ?foe = boss
-    dodge(32, 20)
-    Bardiche()
+    util.dodge(32, 20)
+    util.Bardiche()
     ?foe.debuffs.string ! "damage:1"
       equipL poison sword
       equipR compound shield

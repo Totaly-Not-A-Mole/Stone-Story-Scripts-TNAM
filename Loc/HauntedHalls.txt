@@ -1,22 +1,25 @@
-//variables
-var hpPrcnt
-
-//HitPoint and ARmor Percentages
-hpPrcnt = hp * 100
-hpPrcnt = hpPrcnt / maxhp
+/////////////////////////////////
+// Created By Blued_Bandit#8282//
+//   and Cupcakesupream#1601   //
+/////////////////////////////////
 //neccesary functions
-import SSTNAM/FunctionDump
+var util = import SSTNAM/FunctionDump
+var Prcnt1 = new SSTNAM/functionDump
+var Prcnt2 = new SSTNAM/functionDump
+util.AAC()
+var hpPrcnt = Prcnt1.HPP()
+var arPrcnt = Prcnt2.ARP()
 //main script
 ?loc = Halls
   ?summon.count = 0
-    summonCinder(0)
+    util.summonCinder(0)
   ?time = 1
     var HEnm
     HEnm = 0
   equip the ghost slayer
   ?foe.count >=6 & HEnm < 1
-    godBlade(6)
+    util.godBlade(6)
     HEnm = 10
   ?hpPrcnt < 50
     activate potion
-  dodge(32, 60)
+  util.dodge(32, 60)
