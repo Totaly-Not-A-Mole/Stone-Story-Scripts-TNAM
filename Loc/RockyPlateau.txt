@@ -1,12 +1,13 @@
 //  Variables
 var attkCnt = 3
 var timeSnap = 0
-var hpPrcnt
-//  HitPoint Percentage
-hpPrcnt = hp * 100
-hpPrcnt = hpPrcnt / maxhp
 //  Necicary functions
-import SSTNAM/FunctionDump
+var util = import SSTNAM/FunctionDump
+var Prcnt1 = new SSTNAM/functionDump
+var Prcnt2 = new SSTNAM/functionDump
+util.AAC()
+var hpPrcnt = Prcnt1.HPP()
+var arPrcnt = Prcnt2.ARP()
 //  main script
 ?loc = Rocky
 //reset variables on loop
@@ -15,7 +16,7 @@ import SSTNAM/FunctionDump
     timeSnap = 0
 //summon cinderwisp
   ?summon.count = 0
-    summonCinder(0)
+    util.summonCinder(0)
   :?foe ! boss & foe ! acronian_soldier //stops when fighting
 //pickup items (ignore boulders for time)
     ?pickup.distance < 5
@@ -26,9 +27,9 @@ import SSTNAM/FunctionDump
       equipR compound shield
 //arconaian soldier automation
   :?foe = acronian_soldier
-    godBlade(0)
-    cinder("10")
-    ?foe.debuffs.string ! "damage:1"
+    util.godBlade(0)
+    util.cinder("10")
+    ?foe.debuffs.string ! "Damage:1"
       equipL poison sword
       equipR compound shield
     :?foe.debuffs.string ! "Chill:6"
@@ -36,30 +37,37 @@ import SSTNAM/FunctionDump
       equipR compound shield
     :?hpPrcnt < 100
       equip the ghost slayer
-    :?armorPrcnt > 50 & foe.armor > 0
+    :?foe.armor > 0
         equip heavy hammer
     :
       equipL ice sword
       equipR compound shield
-//arconaian scout automation
-  :?foe = acronian_scout
-    godBlade(0)
-    cinder("10")
+//acronian scout automation
+  ?foe = acronian_scout
+    util.godBlade(0)
+    util.cinder("10")
     ?foe.debuffs.string ! "damage:1"
       equipL poison sword
       equipR compound shield
+    :?foe.debuffs.string ! "chill:6"
+      equipL ice sword
+      equipR compound shield
     :?hpPrcnt < 100
       equip the ghost slayer
+    :?arPrcnt >= 50
+      equip bardiche
+      util.Bardiche()
     :
       equipL ice sword
       equipR compound shield
+    
 //the man himself
   :?foe = boss
 
     ?foe = phase1
       equipL fire sword
       equipR compound shield
-      ?foe.debuffs.string ! "damage:1"
+      ?foe.debuffs.string ! "Damage:1"
         equipL poison sword
         equipR compound shield
       :?foe.debuffs.string ! "Chill:6"
@@ -67,7 +75,6 @@ import SSTNAM/FunctionDump
         equipR compound shield
       :?hpPrcnt < 50
         equip the ghost slayer
-
     ?foe = phase2
       ?foe = poison
         equipL ice sword
@@ -103,7 +110,7 @@ import SSTNAM/FunctionDump
       :?foe.debuffs.string ! "Chill:6"
         equipL ice sword
         equipR compound shield
-      :?foe.debuffs.string ! "damage:1"
+      :?foe.debuffs.string ! "Damage:1"
         equipL poison sword
         equipR compound shield
       :?hpPrcnt <= 20
@@ -114,10 +121,13 @@ import SSTNAM/FunctionDump
         equipL fire sword
         equipR compound shield
       ?attkCnt >= 6 & foe.state ! 107
-        Hammer()
         equip heavy hammer
+        util.Hammer()
         ?loc.stars <= 13
-          dodge(32, 35)
+          util.dodge(32, 35)
         :
-          dodge(32, 50)
-      dodge(115, 60)
+          util.dodge(32, 50)
+      ?foe.state > 109 & foe.state < 115
+        equip bardiche
+        util.Bardiche()
+      util.dodge(115, 60)

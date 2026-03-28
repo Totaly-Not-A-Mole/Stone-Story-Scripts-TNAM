@@ -1,14 +1,17 @@
+//Completely standalone
+
+
+
 var hpPrcnt
 var arPrcnt
 var maxarmorMax
 //HitPoint and ARmor Percentages
-hpPrcnt = hp * 100
-hpPrcnt = hpPrcnt / maxhp
+hpPrcnt = (hp * 100) / maxhp
 ?time = 1
-  maxarmorMax = 0
+  maxarmorMax = 1
 ?maxarmor > maxarmorMax
   maxarmorMax = maxarmor
-arPrcnt = armor * 100
+arPrcnt = (armor * 100) / maxarmor
 ?maxarmor > 0
   arPrcnt = arPrcnt / maxarmor
 :

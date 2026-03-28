@@ -12,23 +12,23 @@ func godBlade(C)//Count
       activate right
 //bardiche ability
 func Bardiche()
-  ?foe = foe.distance < 12 //change this line as needed
+  ?foe.distance <= 10 //change this line as needed
   ^ & item.CanActivate()
-  ^ & item.GetCooldown("bard") <= 0
+  ^ & item.GetCooldown("bardiche") <= 0
     equip bardiche
     activate R
-  ?item.right = "bard" //keeps it equipped during the cast
+  ?item.right = "bardiche" //keeps it equipped during the cast
   ^ & item.right.state = 2
     equip bardiche
     activate R
 //heavy hammer ability
 func Hammer()
-  ?foe = foe.distance < 12 //change this line as needed
+  ?foe.distance < 12 //change this line as needed
   ^ & item.CanActivate()
-  ^ & item.GetCooldown("heavy") <= 0
+  ^ & item.GetCooldown("heavy_hammer") <= 0
     equip heavy hammer
     activate R
-  ?item.right = "heavy" //keeps it equipped during the cast
+  ?item.right = "heavy_hammer" //keeps it equipped during the cast
   ^ & item.right.state = 2
     equip heavy hammer
     activate R
@@ -52,3 +52,28 @@ func cinder(C)//debuff count
   ?item.getcooldown("cinderwisp") <= 0
   ^ & foe.debuffs.string = deBuff
     activate cinderwisp
+//error function    
+func error(msg)
+  >`20,2,ERROR: @msg@
+//AAC
+func AAC()
+  ?item.left.state = 3
+    equipL *0 wand //trash
+    equipL @item.left@
+  ?item.right.state = 3
+    equipR *0 shield //trash
+    equip @item.right@
+//HitPoint Percentage
+func HPP()
+  return (hp * 100) / maxhp
+
+//Armor Percentage
+func ARP()
+  var maxarmorMax = storage.Get("maxarmorMax", 1)
+  ?maxarmor > maxarmorMax
+    maxarmorMax = maxarmor
+    storage.Set("maxarmorMax", maxarmorMax)
+  ?maxarmor > 0
+    return (armor * 100) / maxarmor 
+  :
+    return (armor * 100) / maxarmorMax
